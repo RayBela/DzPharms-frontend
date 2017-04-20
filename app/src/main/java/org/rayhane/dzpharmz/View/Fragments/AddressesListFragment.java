@@ -13,12 +13,12 @@ import org.rayhane.dzpharmz.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PharmDetailsFragment.OnFragmentInteractionListener} interface
+ * {@link AddressesListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PharmDetailsFragment#newInstance} factory method to
+ * Use the {@link AddressesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PharmDetailsFragment extends Fragment {
+public class AddressesListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class PharmDetailsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public PharmDetailsFragment() {
+    public AddressesListFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +40,11 @@ public class PharmDetailsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PharmDetailsFragment.
+     * @return A new instance of fragment AddressesListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PharmDetailsFragment newInstance(String param1, String param2) {
-        PharmDetailsFragment fragment = new PharmDetailsFragment();
+    public static AddressesListFragment newInstance(String param1, String param2) {
+        AddressesListFragment fragment = new AddressesListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,13 +65,13 @@ public class PharmDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pharm_details, container, false);
+        return inflater.inflate(R.layout.fragment_addresses_list, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onPharmDetailsFragmentInteraction(uri);
+            mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -104,6 +104,6 @@ public class PharmDetailsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onPharmDetailsFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 }

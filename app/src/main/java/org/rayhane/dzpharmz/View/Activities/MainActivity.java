@@ -1,7 +1,6 @@
 package org.rayhane.dzpharmz.View.Activities;
 
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,25 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.rayhane.dzpharmz.R;
 import org.rayhane.dzpharmz.View.Fragments.FavorisFragment;
 import org.rayhane.dzpharmz.View.Fragments.HomeFragment;
-import org.rayhane.dzpharmz.View.Fragments.NotificationFragment;
-import org.rayhane.dzpharmz.View.Fragments.PharmDetailsFragment;
 import org.rayhane.dzpharmz.View.Fragments.PharmsListFragment;
 import org.rayhane.dzpharmz.View.Fragments.SettingsFragment;
 

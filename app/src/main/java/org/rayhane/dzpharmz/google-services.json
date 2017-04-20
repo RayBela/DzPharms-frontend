@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "384177930",
+    "project_id": "luminous-mesh-161214"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384177930:android:ecd207dd6ec3d119",
+        "android_client_info": {
+          "package_name": "org.rayhane.dzpharmz.View.Activities"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384177930-4mnnj812h3gqbvel8jn91kfjhfpun9m4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.rayhane.dzpharmz.View.Activities",
+            "certificate_hash": "aa33d7d43a59d8742c47bad5d8d77b5f58a52c36"
+          }
+        },
+        {
+          "client_id": "384177930-f518fugi17o3b11fb983j5heu68if3nt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzBWG0b8VGUtWtBUoOxhF5X2nD-tlsKJc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,17 +28,20 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.Activities.MainActivity" >
+        <activity android:name=".View.Activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
         <activity android:name=".View.Activities.AboutUsActivity" />
-        <activity android:name=".View.Activities.PrivacyPolicyActivity"></activity>
+        <activity android:name=".View.Activities.PrivacyPolicyActivity" />
+        <activity android:name=".View.Activities.PharmacyActivity" />
+        <activity android:name=".View.Activities.SplashScreenActivity" />
+        <activity android:name=".View.Activities.IntroActivity" />
+        <activity android:name=".View.Activities.LoginActivity" />
+        <activity android:name=".View.Activities.SignupActivity"></activity>
     </application>
 
 </manifest>
