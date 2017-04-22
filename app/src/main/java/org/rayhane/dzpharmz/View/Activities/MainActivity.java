@@ -31,14 +31,9 @@ import org.rayhane.dzpharmz.View.Fragments.SettingsFragment;
 public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
         FavorisFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener,
         PharmsListFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener
 {
-
-
-
-
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
@@ -54,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG_FAVORIS = "favoris";
     private static final String TAG_PHARMS_LIST = "pharms list";
     private static final String TAG_PHARM_DETAIL = "pharm details";
-    private static final String TAG_NOTIFICATIONS = "notifications";
     private static final String TAG_SETTINGS = "settings";
     public static String CURRENT_TAG = TAG_HOME;
 
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
 
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,11 +170,8 @@ public class MainActivity extends AppCompatActivity implements
             case 2:
                 PharmsListFragment pharmsListFragment = new PharmsListFragment();
                 return pharmsListFragment;
-            case 3:
-                NotificationFragment notificationsFragment = new NotificationFragment();
-                return notificationsFragment;
 
-            case 4:
+            case 3:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 return settingsFragment;
 
@@ -215,12 +206,8 @@ public class MainActivity extends AppCompatActivity implements
                         navItemIndex = 2;
                         CURRENT_TAG = TAG_PHARMS_LIST;
                         break;
-                    case R.id.nav_notifications:
-                        navItemIndex = 3;
-                        CURRENT_TAG = TAG_NOTIFICATIONS;
-                        break;
                     case R.id.nav_settings:
-                        navItemIndex = 4;
+                        navItemIndex = 3;
                         CURRENT_TAG = TAG_SETTINGS;
                         break;
                     case R.id.nav_about_us:
@@ -349,10 +336,6 @@ public class MainActivity extends AppCompatActivity implements
         return;
     }
 
-    @Override
-    public void onNotifFragmentInteraction(Uri uri) {
-        return;
-    }
 
     @Override
     public void onListFragmentInteraction(Uri uri) {

@@ -8,11 +8,14 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -28,7 +31,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.Activities.MainActivity">
+        <activity android:name=".View.Activities.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +42,7 @@
         <activity android:name=".View.Activities.PrivacyPolicyActivity" />
         <activity android:name=".View.Activities.PharmacyActivity" />
         <activity android:name=".View.Activities.SplashScreenActivity" />
-        <activity android:name=".View.Activities.IntroActivity" />
+        <activity android:name=".View.Activities.MainActivity" />
         <activity android:name=".View.Activities.LoginActivity" />
         <activity android:name=".View.Activities.SignupActivity"></activity>
     </application>

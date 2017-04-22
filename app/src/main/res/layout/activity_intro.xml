@@ -32,6 +32,17 @@
         android:textAllCaps="false"
         android:fontFamily="sans-serif" />
 
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="200dp"
+        android:layout_height="55dp"
+        android:layout_above="@+id/imageView6"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignStart="@+id/button3"
+        android:layout_marginBottom="49dp"
+        android:gravity="center_vertical|center" />
+
     <Button
         android:text="S'inscrire"
         android:layout_width="200dp"
@@ -69,29 +80,29 @@
         android:layout_centerHorizontal="true" />
 
     <ImageView
-        app:srcCompat="@color/cast_expanded_controller_seek_bar_progress_background_tint_color"
-        android:layout_marginBottom="43dp"
         android:id="@+id/imageView6"
-        android:background="@drawable/cast_album_art_placeholder_large"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="false"
+        android:layout_width="150dp"
         android:layout_height="2dp"
         android:layout_above="@+id/button3"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="150dp" />
-
-    <ImageView
-        app:srcCompat="@color/cast_expanded_controller_seek_bar_progress_background_tint_color"
-        android:id="@+id/imageView5"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="43dp"
+        android:adjustViewBounds="false"
         android:background="@drawable/cast_album_art_placeholder_large"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="false"
-        android:layout_height="2dp"
+        app:srcCompat="@color/wallet_bright_foreground_disabled_holo_light" />
+
+    <ImageView
+        android:id="@+id/imageView5"
         android:layout_width="150dp"
-        android:layout_alignTop="@+id/imageView6"
+        android:layout_height="2dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/imageView6"
+        android:adjustViewBounds="false"
+        android:background="@drawable/cast_album_art_placeholder_large"
+        android:scaleType="centerCrop"
+        app:srcCompat="@color/wallet_bright_foreground_disabled_holo_light" />
 
     <TextView
         android:text="OU"
