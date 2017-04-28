@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "384177930",
-    "project_id": "luminous-mesh-161214"
+    "firebase_url": "https://luminous-mesh-161214.firebaseio.com",
+    "project_id": "luminous-mesh-161214",
+    "storage_bucket": "luminous-mesh-161214.appspot.com"
   },
   "client": [
     {
@@ -13,21 +15,17 @@
       },
       "oauth_client": [
         {
-          "client_id": "384177930-4mnnj812h3gqbvel8jn91kfjhfpun9m4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.rayhane.dzpharmz",
-            "certificate_hash": "aa33d7d43a59d8742c47bad5d8d77b5f58a52c36"
-          }
+          "client_id": "384177930-ufs8bti2u919dbo7fvvg51obn3ue5tb1.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
-          "client_id": "384177930-f518fugi17o3b11fb983j5heu68if3nt.apps.googleusercontent.com",
+          "client_id": "384177930-f4l3k4hamotndai7ude9hvdeubacp1u4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzBWG0b8VGUtWtBUoOxhF5X2nD-tlsKJc"
+          "current_key": "AIzaSyD6cwM9ByuethEFLyvb2Zb5Y-VWSin4Kj0"
         }
       ],
       "services": {
@@ -39,7 +37,55 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384177930:android:9c4a670794b3381a",
+        "android_client_info": {
+          "package_name": "org.rayhane.dzpharmz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384177930-ufs8bti2u919dbo7fvvg51obn3ue5tb1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "384177930-f4l3k4hamotndai7ude9hvdeubacp1u4.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "384177930-s5ci5pajs0qivsl870tb617ncltr91p8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.rayhane.dzpharmz",
+            "certificate_hash": "aa33d7d43a59d8742c47bad5d8d77b5f58a52c36"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6cwM9ByuethEFLyvb2Zb5Y-VWSin4Kj0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384177930-ufs8bti2u919dbo7fvvg51obn3ue5tb1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }

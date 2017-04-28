@@ -1,5 +1,6 @@
 package org.rayhane.dzpharmz.View.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -15,14 +16,31 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.GoogleMap;
 
 import org.rayhane.dzpharmz.R;
+import org.rayhane.dzpharmz.View.Fragments.AddressesListFragment;
 import org.rayhane.dzpharmz.View.Fragments.FavorisFragment;
 import org.rayhane.dzpharmz.View.Fragments.HomeFragment;
 import org.rayhane.dzpharmz.View.Fragments.PharmsListFragment;
@@ -32,14 +50,25 @@ public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
         FavorisFragment.OnFragmentInteractionListener,
         PharmsListFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener
+        SettingsFragment.OnFragmentInteractionListener,
+        AddressesListFragment.OnFragmentInteractionListener,
+        GoogleApiClient.OnConnectionFailedListener
 {
 
+    // Ui Elements
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    private TextView txtName, txtWebsite;
+    private ImageView imgProfile;
+
+    //header bar elements
+
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -47,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements
     // tags used to attach the fragments
     private static final String TAG_HOME = "home";
     private static final String TAG_FAVORIS = "favoris";
+    private static final String TAG_ADDRESSES = "addresses";
     private static final String TAG_PHARMS_LIST = "pharms list";
-    private static final String TAG_PHARM_DETAIL = "pharm details";
     private static final String TAG_SETTINGS = "settings";
     public static String CURRENT_TAG = TAG_HOME;
 
@@ -58,7 +87,12 @@ public class MainActivity extends AppCompatActivity implements
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
 
-    //private GoogleMap mMap;
+    private static final int RC_SIGN_IN = 9001;
+
+    private GoogleApiClient mGoogleApiClient;
+    private ProgressDialog mProgressDialog;
+    private static final String urlProfileImg = "http://www.lumineers.me/images/core/profile-image-zabadnesterling.gif";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +108,13 @@ public class MainActivity extends AppCompatActivity implements
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        // Navigation view header
         navHeader = navigationView.getHeaderView(0);
+        txtName = (TextView) navHeader.findViewById(R.id.name);
+        txtWebsite = (TextView) navHeader.findViewById(R.id.website);
+        imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
+        // Navigation view header
 
-
+        //drawer activities names
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +137,98 @@ public class MainActivity extends AppCompatActivity implements
             loadHomeFragment();
         }
 
+        /*google sign in*/
+
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        signIn();
+
+
+        /**
+         * nav header elements
+         */
+
+
+
     }
+
+    /***
+     * google sign in part
+     */
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                    //se econnecter
+                    }
+                });
+    }
+
+
+    public void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            Log.e(TAG, "display name: " + acct.getDisplayName());
+
+            String personName = acct.getDisplayName();
+            String personPhotoUrl = acct.getPhotoUrl().toString();
+            String email = acct.getEmail();
+
+            txtName.setText(personName);
+            txtWebsite.setText(email);
+
+            Glide.with(this).load(personPhotoUrl)
+                    .crossFade()
+                    .thumbnail(0.5f)
+                    .bitmapTransform(new CircleTransform(this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfile);
+
+            Log.e(TAG, "Name: " + personName + ", email: " + email
+                    + ", Image: " + personPhotoUrl);
+
+
+        } else {
+            // Signed out, show unauthenticated UI.
+            Log.d(TAG, "signed out");
+        }
+    }
+
+
 
     /***
      * Load navigation menu header information
@@ -109,8 +237,22 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void loadNavHeader() {
 
+        // name, website
+        txtName.setText("invité");
+        txtWebsite.setText("invité@gmail.com");
+
+        // loading header background image
+
+        // Loading profile image
+        Glide.with(this).load(urlProfileImg)
+                .crossFade()
+                .thumbnail(0.5f)
+                .bitmapTransform(new CircleTransform(this))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imgProfile);
+
         // showing dot next to notifications label
-        navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);
+        navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);// showing dot next to notifications label
 
     }
 
@@ -172,8 +314,14 @@ public class MainActivity extends AppCompatActivity implements
                 return pharmsListFragment;
 
             case 3:
-                SettingsFragment settingsFragment = new SettingsFragment();
-                return settingsFragment;
+                AddressesListFragment addressesListFragment = new AddressesListFragment();
+                return addressesListFragment;
+
+            case 4:
+
+            SettingsFragment settingsFragment = new SettingsFragment();
+            return  settingsFragment;
+
 
             default:
                 return new HomeFragment();
@@ -207,8 +355,12 @@ public class MainActivity extends AppCompatActivity implements
                         CURRENT_TAG = TAG_PHARMS_LIST;
                         break;
                     case R.id.nav_settings:
-                        navItemIndex = 3;
+                        navItemIndex = 4;
                         CURRENT_TAG = TAG_SETTINGS;
+                        break;
+                    case R.id.nav_addresses:
+                        navItemIndex = 3;
+                        CURRENT_TAG = TAG_ADDRESSES;
                         break;
                     case R.id.nav_about_us:
                         startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
@@ -296,7 +448,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         if (id == R.id.action_logout) {
-            Toast.makeText(getApplicationContext(), "Logout user!", Toast.LENGTH_LONG).show();
+            signOut();
+            Toast.makeText(getApplicationContext(), "Vous etes déconnécté!", Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -324,7 +477,45 @@ public class MainActivity extends AppCompatActivity implements
             fab.hide();
     }
 
+   /* @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /*
+        if (requestCode == HomeFragment.REQUEST_CHECK_SETTINGS) {
+            HomeFragment fragment = (HomeFragment) getSupportFragmentManager()
+                    .getFragments();
 
+            fragment.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+*/
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            showProgressDialog();
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    hideProgressDialog();
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
 
     @Override
     public void onHomeFragmentInteraction(Uri uri) {
@@ -348,5 +539,25 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
 }

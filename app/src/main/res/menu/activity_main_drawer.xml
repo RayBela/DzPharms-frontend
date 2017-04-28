@@ -12,13 +12,13 @@
             android:title="@string/nav_Favoris" />
         <item
             android:id="@+id/nav_pharms_list"
-            android:icon="@mipmap/ic_dns_black_24dp"
+            android:icon="@mipmap/ic_location_on_black_24dp"
             android:title="@string/nav_Pharm_list" />
 
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@mipmap/ic_notifications_black_24dp"
-            android:title="@string/nav_notifications" />
+            android:id="@+id/nav_addresses"
+            android:icon="@mipmap/ic_garage_black_24dp"
+            android:title="@string/nav_addresses_list" />
 
         <item
             android:id="@+id/nav_settings"
@@ -26,7 +26,7 @@
             android:title="@string/nav_settings" />
     </group>
 
-    <item android:title="Other">
+    <item android:title="Autres">
         <menu>
             <item
                 android:id="@+id/nav_about_us"

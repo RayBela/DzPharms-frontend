@@ -4,11 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.rayhane.dzpharmz.Adapters.AddressAdapter;
+import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
+import org.rayhane.dzpharmz.Model.Address;
+import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
+import org.rayhane.dzpharmz.View.Activities.DeviderItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,12 +72,56 @@ public class AddressesListFragment extends Fragment {
         }
     }
 
+
+    private List<Address> addressesList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private AddressAdapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_addresses_list, container, false);
+
+
+        View view = inflater.inflate(R.layout.fragment_addresses_list, container, false);
+
+        // Replace 'android.R.id.list' with the 'id' of your RecyclerView
+        recyclerView = (RecyclerView) view.findViewById(R.id.addresses_recycler_view);
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        Log.d("debugMode", "The application stopped after this");
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DeviderItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+
+
+        mAdapter = new AddressAdapter(addressesList);
+        recyclerView.setAdapter(mAdapter);
+
+        prepareAddressesData();
+
+        return view;
+
     }
+
+
+    private void prepareAddressesData() {
+
+        Address address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
+        addressesList.add(address);
+
+        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
+        addressesList.add(address);
+
+        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
+        addressesList.add(address);
+
+        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
+        addressesList.add(address);
+
+
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

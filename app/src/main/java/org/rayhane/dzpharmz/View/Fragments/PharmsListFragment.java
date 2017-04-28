@@ -4,11 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
+import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
+import org.rayhane.dzpharmz.View.Activities.DeviderItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,11 +71,61 @@ public class PharmsListFragment extends Fragment {
         }
     }
 
+    private List<Pharmacy> pharmsList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private PharmacyAdapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pharms_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_pharms_list, container, false);
+
+        // Replace 'android.R.id.list' with the 'id' of your RecyclerView
+        recyclerView = (RecyclerView) view.findViewById(R.id.pharms_recycler_view);
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        Log.d("debugMode", "The application stopped after this");
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DeviderItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+
+
+        mAdapter = new PharmacyAdapter(pharmsList);
+        recyclerView.setAdapter(mAdapter);
+
+        preparePharmsData();
+
+        return view;
+    }
+
+
+    private void preparePharmsData() {
+
+        Pharmacy pharm = new Pharmacy("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 2","Rue Larbi Men Mhidi , Oran","Fermé");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 3","Rue Larbi Men Mhidi , Oran","Ouverte");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 4","Rue Larbi Men Mhidi , Oran","Ouverte");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 5","Rue Larbi Men Mhidi , Oran","Fermé");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 6","Rue Larbi Men Mhidi , Oran","Ouverte");
+        pharmsList.add(pharm);
+
+        pharm = new Pharmacy("Pharmacie 7","Rue Larbi Men Mhidi , Oran","Fermé");
+        pharmsList.add(pharm);
+
+        mAdapter.notifyDataSetChanged();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
