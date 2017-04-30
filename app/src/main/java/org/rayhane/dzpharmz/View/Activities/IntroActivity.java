@@ -6,7 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,8 +40,10 @@ public class IntroActivity extends AppCompatActivity implements
     private ProgressDialog mProgressDialog;
     private SignInButton signInBtn;
 
-    private Button signupBtn;
-    private Button loginBtn;
+    public String txtName, txtWebsite;
+    public String imgProfileUrl;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,52 +57,26 @@ public class IntroActivity extends AppCompatActivity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
 
-        signupBtn = (Button) findViewById(R.id.signup_btn);
-        loginBtn = (Button) findViewById(R.id.login_btn);
+        /*google sign in*/
 
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signupIntent = new Intent(IntroActivity.this, SignupActivity.class);
-                startActivity(signupIntent);
-            }
-        });
-
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent loginIntent = new Intent(IntroActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
-            }
-        });
-
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestProfile()
                 .build();
-        // [END configure_signin]
 
-        // [START build_client]
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        // [END build_client]
 
-        // [START customize_button]
-        // Set the dimensions of the sign-in button.
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
-        // [END customize_button]
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        mGoogleApiClient.connect();
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
@@ -138,30 +119,68 @@ public class IntroActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+
+            Log.e(TAG, "display name: " + acct.getDisplayName());
+
+            String personName = acct.getDisplayName();
+            String personPhotoUrl = acct.getPhotoUrl().toString();
+            String email = acct.getEmail();
+
+            txtName = personName ;
+            txtWebsite = email;
+            imgProfileUrl = personPhotoUrl;
+
+            Log.e(TAG, "Name: " + personName + ", email: " + email
+                    + ", Image: " + personPhotoUrl);
+
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            homeIntent.putExtra("userName",txtName);
+            homeIntent.putExtra("userEmail",txtWebsite);
+            homeIntent.putExtra("imgUrl",imgProfileUrl);
+            startActivity(homeIntent);
+
         } else {
-            // Signed out, show unauthenticated UI.
+
+            Log.e(TAG, "signed out");
         }
     }
     // [END handleSignInResult]
 
     // [START signIn]
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideProgressDialog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     private void signIn() {
+
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     // [END signIn]
 
     // [START signOut]
-    private void signOut() {
+   /* public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        // [END_EXCLUDE]
+                        Toast.makeText(getApplicationContext(), "Vous etes déconnécté!", Toast.LENGTH_LONG).show();
+
                     }
                 });
-    }
+    }*/
     // [END signOut]
 
     // [START revokeAccess]
@@ -203,15 +222,12 @@ public class IntroActivity extends AppCompatActivity implements
 
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
                 signIn();
-                showProgressDialog();
-                Intent homeIntent = new Intent(this, MainActivity.class);
-                startActivity(homeIntent);
+
                 break;
 
         }

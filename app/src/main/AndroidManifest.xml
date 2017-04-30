@@ -18,7 +18,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.Activities.MainActivity">
+        <activity android:name=".View.Activities.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +31,7 @@
             android:name=".View.Activities.PharmacyActivity"
             android:label="@string/title_activity_pharmacy"
             android:theme="@style/AppTheme" />
-        <activity android:name=".View.Activities.IntroActivity" />
+        <activity android:name=".View.Activities.MainActivity" />
         <activity android:name=".View.Activities.LoginActivity" />
         <activity android:name=".View.Activities.SignupActivity" />
     </application>
