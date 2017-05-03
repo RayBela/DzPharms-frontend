@@ -29,8 +29,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
         public AddressViewHolder(View v) {
             super(v);
-            addressName = (TextView) v.findViewById(R.id.name);
-            addressLocation = (TextView) v.findViewById(R.id.location);
+            addressName = (TextView) v.findViewById(R.id.nameA);
+            addressLocation = (TextView) v.findViewById(R.id.locationA);
 
 
 
@@ -47,7 +47,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.address_list_row, parent, false);
+                .inflate(R.layout.address_card, parent, false);
         return new AddressViewHolder(itemView);
     }
 

@@ -7,31 +7,54 @@ package org.rayhane.dzpharmz.Model;
 public class Pharmacy {
 
     protected String name;
-    protected String address;
+    protected String description;
+    protected String pharmacy_address;
     protected double longitude;
     protected double latitude;
-    protected String state;
+    protected String phone_number;
+    protected String href;
 
-    public Pharmacy(String name, String address, double longitude, double latitude, String state) {
+
+    public Pharmacy() {
+    }
+
+    public String getPharmacy_address() {
+        return pharmacy_address;
+    }
+
+    public Pharmacy(String name, String pharmacy_address, String href) {
         this.name = name;
-        this.address = address;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.state = state;
+        this.pharmacy_address = pharmacy_address;
+        this.href = href;
     }
 
-    public Pharmacy(String name, String address, String state) {
-        this.name = name;
-        this.address = address;
-        this.state = state;
+    public void setPharmacy_address(String pharmacy_address) {
+        this.pharmacy_address = pharmacy_address;
     }
 
-    public String getState() {
-        return state;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public String getDescription() {
+
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {
@@ -42,13 +65,7 @@ public class Pharmacy {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public double getLongitude() {
         return longitude;

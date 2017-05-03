@@ -1,6 +1,7 @@
 package org.rayhane.dzpharmz.View.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -15,22 +16,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.rayhane.dzpharmz.Adapters.OnItemClickListener;
 import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
 import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
-import org.rayhane.dzpharmz.View.Activities.DeviderItemDecoration;
+import org.rayhane.dzpharmz.Services.ApiClient;
+import org.rayhane.dzpharmz.Services.DzpharmsClient;
+import org.rayhane.dzpharmz.View.Activities.PharmacyMapsActivity;
+import org.rayhane.dzpharmz.View.Decoration.DeviderItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PharmsListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PharmsListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import static org.rayhane.dzpharmz.Services.ApiClient.getClient;
+
 public class PharmsListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,17 +48,10 @@ public class PharmsListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public PharmsListFragment() {
-        // Required empty public constructor
+        // Required empty public constructor Failed to connect to localhost/127.0.0.1:80
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PharmsListFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static PharmsListFragment newInstance(String param1, String param2) {
         PharmsListFragment fragment = new PharmsListFragment();
@@ -85,18 +82,51 @@ public class PharmsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pharms_list, container, false);
 
+
+
         // Replace 'android.R.id.list' with the 'id' of your RecyclerView
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this.getActivity());
         Log.d("debugMode", "The application stopped after this");
 
+        Retrofit retrofit = getClient();
+        // Create a very simple REST adapter which points the GitHub API endpoint.
+        DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
+
+        // Fetch a list of the Github repositories.
+        Call<List<Pharmacy>> call = client.getPharms();
+
+        call.enqueue(new Callback<List<Pharmacy>>() {
+            @Override
+            public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
+                Log.e("success", response.toString());
+                List<Pharmacy> pharms = response.body();
+                Log.e("success", "Number of pharms received: " + pharms.size());
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Pharmacy>> call, Throwable t) {
+
+
+                Log.e("failure",t.getMessage());
+
+            }
+        });
+
+
+
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DeviderItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new PharmacyAdapter(pharmsList);
+        mAdapter = new PharmacyAdapter(pharmsList, new OnItemClickListener() {
+            @Override
+            public void onItemClick(Pharmacy item) {
+                Intent pharmMapIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
+                startActivity(pharmMapIntent);
+            }
+        });
         recyclerView.setAdapter(mAdapter);
 
         preparePharmsData();
@@ -207,16 +237,7 @@ public class PharmsListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Uri uri);

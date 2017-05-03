@@ -1,4 +1,4 @@
-package org.rayhane.dzpharmz.View.Activities;
+package org.rayhane.dzpharmz.View.Decoration;
 
 import android.content.Context;
 import android.content.res.TypedArray;

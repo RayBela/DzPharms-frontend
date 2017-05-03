@@ -17,11 +17,11 @@
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp"
-       >
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="90dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -30,8 +30,8 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/grey_star" />
+                android:layout_marginRight="20dp"
+                android:src="@mipmap/ic_home_black_24dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,17 +40,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/nameC"
+                    android:id="@+id/nameA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="Pharmacy Name"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Address Name"
+                    android:textColor="@color/colorAccent"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/addressC"
+                    android:id="@+id/locationA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="7dp"
@@ -60,14 +60,6 @@
                     android:textColor="@color/name"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/stateC"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="mmm dd yyyy - hh:mm a"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp" />
 
             </LinearLayout>
 

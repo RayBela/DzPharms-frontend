@@ -1,4 +1,4 @@
-package org.rayhane.dzpharmz.View.Activities;
+package org.rayhane.dzpharmz.View.Decoration;
 
 /**
  * Created by Rayhane on 24/04/2017.

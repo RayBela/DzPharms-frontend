@@ -31,9 +31,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
         public FavoriteViewHolder(View v) {
             super(v);
-            favName = (TextView) v.findViewById(R.id.name);
-            favState = (TextView) v.findViewById(R.id.state);
-            favAddress = (TextView) v.findViewById(R.id.address);
+            favName = (TextView) v.findViewById(R.id.nameF);
+            favState = (TextView) v.findViewById(R.id.stateF);
+            favAddress = (TextView) v.findViewById(R.id.addressF);
 
 
         }
@@ -49,7 +49,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.favs_list_row, parent, false);
+                .inflate(R.layout.favorite_card, parent, false);
         return new FavoriteViewHolder(itemView);
     }
 

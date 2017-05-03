@@ -12,23 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.rayhane.dzpharmz.Adapters.AddressAdapter;
-import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
 import org.rayhane.dzpharmz.Model.Address;
-import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
-import org.rayhane.dzpharmz.View.Activities.DeviderItemDecoration;
+import org.rayhane.dzpharmz.View.Decoration.DeviderItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AddressesListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddressesListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class AddressesListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,14 +36,6 @@ public class AddressesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddressesListFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static AddressesListFragment newInstance(String param1, String param2) {
         AddressesListFragment fragment = new AddressesListFragment();
@@ -91,7 +74,6 @@ public class AddressesListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(this.getActivity());
         Log.d("debugMode", "The application stopped after this");
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DeviderItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
 
         mAdapter = new AddressAdapter(addressesList);
@@ -147,16 +129,7 @@ public class AddressesListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

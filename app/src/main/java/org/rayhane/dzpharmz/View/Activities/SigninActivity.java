@@ -1,7 +1,13 @@
 package org.rayhane.dzpharmz.View.Activities;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +35,7 @@ import org.rayhane.dzpharmz.R;
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
  * profile.
  */
-public class IntroActivity extends AppCompatActivity implements
+public class SigninActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -38,6 +44,7 @@ public class IntroActivity extends AppCompatActivity implements
 
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
+
     private SignInButton signInBtn;
 
     public String txtName, txtWebsite;
@@ -50,15 +57,32 @@ public class IntroActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_intro);
 
         // Views
-
         signInBtn = (SignInButton) findViewById(R.id.sign_in_button);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
+        if(!haveNetworkConnection()){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Cette Application nécessite une connection Internet")
+                    .setCancelable(false)
+                    .setPositiveButton("Activer 3G ou WIFI", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        }
+                    })
+
+                    .setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SigninActivity.this.finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 
         /*google sign in*/
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
@@ -69,8 +93,25 @@ public class IntroActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
+        // set size
+        signInBtn.setSize(SignInButton.SIZE_WIDE);
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
     @Override
@@ -100,7 +141,6 @@ public class IntroActivity extends AppCompatActivity implements
         }
     }
 
-    // [START onActivityResult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -111,42 +151,31 @@ public class IntroActivity extends AppCompatActivity implements
             handleSignInResult(result);
         }
     }
-    // [END onActivityResult]
 
-    // [START handleSignInResult]
+
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-
             Log.e(TAG, "display name: " + acct.getDisplayName());
-
             String personName = acct.getDisplayName();
             String personPhotoUrl = acct.getPhotoUrl().toString();
             String email = acct.getEmail();
-
             txtName = personName ;
             txtWebsite = email;
             imgProfileUrl = personPhotoUrl;
-
             Log.e(TAG, "Name: " + personName + ", email: " + email
                     + ", Image: " + personPhotoUrl);
-
             Intent homeIntent = new Intent(this, MainActivity.class);
             homeIntent.putExtra("userName",txtName);
             homeIntent.putExtra("userEmail",txtWebsite);
             homeIntent.putExtra("imgUrl",imgProfileUrl);
             startActivity(homeIntent);
 
-        } else {
-
-            Log.e(TAG, "signed out");
-        }
+        } else { Log.e(TAG, "signed out"); }
     }
-    // [END handleSignInResult]
 
-    // [START signIn]
 
     @Override
     protected void onResume() {
@@ -163,38 +192,9 @@ public class IntroActivity extends AppCompatActivity implements
     }
 
     private void signIn() {
-
-
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    // [END signIn]
-
-    // [START signOut]
-   /* public void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Toast.makeText(getApplicationContext(), "Vous etes déconnécté!", Toast.LENGTH_LONG).show();
-
-                    }
-                });
-    }*/
-    // [END signOut]
-
-    // [START revokeAccess]
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-    // [END revokeAccess]
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -209,7 +209,6 @@ public class IntroActivity extends AppCompatActivity implements
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
-
         mProgressDialog.show();
     }
 
@@ -218,9 +217,6 @@ public class IntroActivity extends AppCompatActivity implements
             mProgressDialog.hide();
         }
     }
-
-
-
 
     @Override
     public void onClick(View v) {

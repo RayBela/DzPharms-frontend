@@ -1,11 +1,9 @@
 package org.rayhane.dzpharmz.View.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,8 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,29 +26,24 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.plus.Plus;
 
 import org.rayhane.dzpharmz.R;
+import org.rayhane.dzpharmz.View.Decoration.CircleTransform;
+import org.rayhane.dzpharmz.View.Fragments.AddPharmacyFragment;
 import org.rayhane.dzpharmz.View.Fragments.AddressesListFragment;
 import org.rayhane.dzpharmz.View.Fragments.FavorisFragment;
 import org.rayhane.dzpharmz.View.Fragments.HomeFragment;
 import org.rayhane.dzpharmz.View.Fragments.PharmsListFragment;
-import org.rayhane.dzpharmz.View.Fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
         FavorisFragment.OnFragmentInteractionListener,
         PharmsListFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener,
+        AddPharmacyFragment.OnFragmentInteractionListener,
         AddressesListFragment.OnFragmentInteractionListener,
         GoogleApiClient.OnConnectionFailedListener
 {
@@ -66,11 +57,8 @@ public class MainActivity extends AppCompatActivity implements
     public TextView txtName, txtWebsite;
     public ImageView imgProfile;
 
-    //header bar elements
-
-
+    //Tags
     private static final String TAG = MainActivity.class.getSimpleName();
-
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -83,10 +71,12 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG_SETTINGS = "settings";
     public static String CURRENT_TAG = TAG_HOME;
 
+    // activity names
     private String[] activityTitles;
 
     // flag to load home fragment when user presses back key
     private boolean shouldLoadHomeFragOnBackPress = true;
+
     private Handler mHandler;
 
     private String urlProfileImg ;
@@ -127,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
+        // build google api client to sign out
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -149,42 +140,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
-
-
-/*
-    public void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            Log.e(TAG, "display name: " + acct.getDisplayName());
-
-            String personName = acct.getDisplayName();
-            String personPhotoUrl = acct.getPhotoUrl().toString();
-            String email = acct.getEmail();
-
-            txtName.setText(personName);
-            txtWebsite.setText(email);
-
-            Glide.with(this).load(personPhotoUrl)
-                    .crossFade()
-                    .thumbnail(0.5f)
-                    .bitmapTransform(new CircleTransform(this))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgProfile);
-
-            Log.e(TAG, "Name: " + personName + ", email: " + email
-                    + ", Image: " + personPhotoUrl);
-
-
-        } else {
-            // Signed out, show unauthenticated UI.
-            Log.d(TAG, "signed out");
-        }
-    }
-*/
-
 
     /***
      * Load navigation menu header information
@@ -221,10 +176,7 @@ public class MainActivity extends AppCompatActivity implements
     private void loadHomeFragment() {
 
         selectNavMenu();
-
-
         setToolbarTitle();
-
 
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
@@ -232,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements
             toggleFab();
             return;
         }
-
 
         Runnable mPendingRunnable = new Runnable() {
             @Override
@@ -251,13 +202,17 @@ public class MainActivity extends AppCompatActivity implements
             mHandler.post(mPendingRunnable);
         }
 
-
         toggleFab();
 
         drawer.closeDrawers();
 
         invalidateOptionsMenu();
     }
+
+    /**
+     *
+     * @return
+     */
 
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
@@ -277,9 +232,8 @@ public class MainActivity extends AppCompatActivity implements
 
             case 4:
 
-            SettingsFragment settingsFragment = new SettingsFragment();
-            return  settingsFragment;
-
+            AddPharmacyFragment addPharmacyFragment = new AddPharmacyFragment();
+            return addPharmacyFragment;
 
             default:
                 return new HomeFragment();
@@ -364,13 +318,13 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawers();
             return;
         }
-
 
         if (shouldLoadHomeFragOnBackPress) {
 
@@ -381,9 +335,9 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
         }
-
         super.onBackPressed();
     }
+
 
     @Override
     protected void onStart() {
@@ -398,37 +352,27 @@ public class MainActivity extends AppCompatActivity implements
             getMenuInflater().inflate(R.menu.main, menu);
         }
 
-
         if (navItemIndex == 3) {
             getMenuInflater().inflate(R.menu.notifications, menu);
         }
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
-
         if (id == R.id.action_logout) {
-
             signOut();
-
-
             return true;
         }
-
-
         if (id == R.id.action_mark_all_read) {
             Toast.makeText(getApplicationContext(), "All notifications marked as read!", Toast.LENGTH_LONG).show();
         }
-
-
         if (id == R.id.action_clear_notifications) {
             Toast.makeText(getApplicationContext(), "Clear all notifications!", Toast.LENGTH_LONG).show();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -443,6 +387,26 @@ public class MainActivity extends AppCompatActivity implements
             fab.hide();
     }
 
+    public void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        //  finish();
+                        Intent introIntent = new Intent(MainActivity.this, SigninActivity.class);
+                        startActivity(introIntent);
+                        Toast.makeText(getApplicationContext(), "Vous etes déconnécté!", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+
+    }
 
     @Override
     public void onHomeFragmentInteraction(Uri uri) {
@@ -471,30 +435,5 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void signOut() {
 
-
-
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-
-                        //  finish();
-                        Intent introIntent = new Intent(MainActivity.this, IntroActivity.class);
-                        startActivity(introIntent);
-                        Toast.makeText(getApplicationContext(), "Vous etes déconnécté!", Toast.LENGTH_LONG).show();
-
-                    }
-                });
-    }
-
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-
-    }
 }

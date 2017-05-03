@@ -70,14 +70,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     protected Location mCurrentLocation;
     protected LocationRequest mLocationRequest;
 
-
     //location variables
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
 
-
     //tags
     private static final String TAG = "HomeFragment";
-
 
     // google play services variables
     protected GoogleApiClient mGoogleApiClient;
@@ -86,8 +83,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     public final static int REQUEST_CHECK_SETTINGS = 100;
 
     private ProgressDialog mProgressDialog;
-
-
 
 
     public HomeFragment() {
@@ -103,7 +98,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         fragment.setArguments(args);
         return fragment;
     }
-
 
 
     @Override
@@ -150,7 +144,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-
                 // For showing a move to my location button
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 buildGoogleApiClient();
@@ -160,8 +153,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         });
         return rootView;
     }
-
-
 
 
     @Override
@@ -184,10 +175,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     @Override
     public void onStart() {
         super.onStart();
-
         if (mGoogleApiClient != null)
         mGoogleApiClient.connect();
-
     }
 
     @Override
@@ -226,28 +215,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     }
 
     protected void requestLocationUpdates(){
-
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(30 * 1000);
         mLocationRequest.setFastestInterval(5 * 1000);
-
     }
 
     public void addMarker(LatLng markerLocation, String posName){
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(markerLocation);
-        markerOptions.title("Current Position");
+        markerOptions.title("Votre Position");
+        markerOptions.snippet("plus de details");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         mCurrLocationMarker = googleMap.addMarker(markerOptions);
         hideProgressDialog();
-
-
     }
 
     protected synchronized void buildGoogleApiClient() {
-
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -255,7 +239,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 .build();
         mGoogleApiClient.connect();
         requestLocationUpdates();
-
     }
 
     @Override
@@ -276,7 +259,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         showProgressDialog();
 
-
         if (mLastLocation != null) {
 
             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
@@ -288,28 +270,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         } else {
-
             requestLocationUpdates();
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
         }
     }
 
 
     @Override
     public void onConnectionSuspended(int i) {
-
-
         Log.i(TAG, "Connection Suspended");
         mGoogleApiClient.connect();
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
         Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
-
     }
 
     @Override
@@ -319,11 +294,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
-
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         Log.i("location :"," "+latLng.toString());
-
         addMarker(latLng,"Current Position");
 
         //move map camera
@@ -339,16 +312,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     }
 
 
-
     @Override
     public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
         final Status status = locationSettingsResult.getStatus();
         switch (status.getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
                 // NO need to show the dialog;
-
                 break;
-
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 try {
                     status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
@@ -357,14 +327,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                     e.printStackTrace();
                 }
                 break;
-
-
             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                 // Location settings are unavailable so not possible to show any dialog now
                 break;
         }
-
-
     }
 
     @Override
@@ -382,12 +348,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CHECK_SETTINGS) {
-
             if (resultCode == Activity.RESULT_OK) {
-
                 Toast.makeText(getActivity(), "GPS enabled", Toast.LENGTH_LONG).show();
             } else {
-
                 Toast.makeText(getActivity(), "GPS is not enabled", Toast.LENGTH_LONG).show();
             }
 
