@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    static String API_BASE_URL = "http://192.168.56.1:80/DzPharms-backend/public/api/v1/";
+    static String API_BASE_URL = "https://dzpharms.herokuapp.com/api/v1/";
 
     public static Retrofit getClient() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();

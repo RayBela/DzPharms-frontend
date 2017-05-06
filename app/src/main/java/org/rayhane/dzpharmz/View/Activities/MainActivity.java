@@ -1,8 +1,13 @@
 package org.rayhane.dzpharmz.View.Activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG_FAVORIS = "favoris";
     private static final String TAG_ADDRESSES = "addresses";
     private static final String TAG_PHARMS_LIST = "pharms list";
-    private static final String TAG_SETTINGS = "settings";
+    private static final String TAG_SUGGEST_PHARM = "suggest pharm";
     public static String CURRENT_TAG = TAG_HOME;
 
     // activity names
@@ -116,6 +122,25 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+     /*   if(!haveNetworkConnection()){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Cette Application nécessite une connection Internet")
+                    .setCancelable(false)
+                    .setPositiveButton("Activer 3G ou WIFI", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        }
+                    })
+
+                    .setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainActivity.this.finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }*/
 
         // build google api client to sign out
 
@@ -268,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                     case R.id.nav_settings:
                         navItemIndex = 4;
-                        CURRENT_TAG = TAG_SETTINGS;
+                        CURRENT_TAG = TAG_SUGGEST_PHARM;
                         break;
                     case R.id.nav_addresses:
                         navItemIndex = 3;
@@ -342,7 +367,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+
         mGoogleApiClient.connect();
+        loadNavHeader();
     }
 
     @Override
@@ -374,6 +401,24 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(), "Clear all notifications!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
     /***

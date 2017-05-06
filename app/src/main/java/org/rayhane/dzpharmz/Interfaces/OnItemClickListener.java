@@ -1,4 +1,4 @@
-package org.rayhane.dzpharmz.Adapters;
+package org.rayhane.dzpharmz.Interfaces;
 
 import org.rayhane.dzpharmz.Model.Pharmacy;
 

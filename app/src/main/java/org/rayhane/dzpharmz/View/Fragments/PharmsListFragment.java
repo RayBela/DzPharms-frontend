@@ -16,14 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.rayhane.dzpharmz.Adapters.OnItemClickListener;
+import org.rayhane.dzpharmz.Interfaces.OnItemClickListener;
 import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
 import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
-import org.rayhane.dzpharmz.Services.ApiClient;
 import org.rayhane.dzpharmz.Services.DzpharmsClient;
 import org.rayhane.dzpharmz.View.Activities.PharmacyMapsActivity;
-import org.rayhane.dzpharmz.View.Decoration.DeviderItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +67,40 @@ public class PharmsListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+        Retrofit retrofit = getClient();
+        // Create a very simple REST adapter which points the dzpharms API endpoint.
+        DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
+
+        // Fetch a list of pharmacies
+        Call<List<Pharmacy>> call = client.getPharms();
+
+        call.enqueue(new Callback<List<Pharmacy>>() {
+            @Override
+            public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
+                Log.e("success", response.toString());
+                List<Pharmacy> pharms = response.body();
+                Log.e("success", "Number of pharms received: " + pharms.size());
+                Log.e("pharms list", pharms.toString());
+                mAdapter = new PharmacyAdapter(pharms, new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Pharmacy item) {
+                        Intent pharmMapIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
+                        startActivity(pharmMapIntent);
+                    }
+                });
+                recyclerView.setAdapter(mAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Pharmacy>> call, Throwable t) {
+                Log.e("failure",t.getMessage());
+            }
+        });
+
+
     }
 
     private List<Pharmacy> pharmsList = new ArrayList<>();
@@ -89,47 +121,21 @@ public class PharmsListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(this.getActivity());
         Log.d("debugMode", "The application stopped after this");
 
-        Retrofit retrofit = getClient();
-        // Create a very simple REST adapter which points the GitHub API endpoint.
-        DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
-
-        // Fetch a list of the Github repositories.
-        Call<List<Pharmacy>> call = client.getPharms();
-
-        call.enqueue(new Callback<List<Pharmacy>>() {
-            @Override
-            public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
-                Log.e("success", response.toString());
-                List<Pharmacy> pharms = response.body();
-                Log.e("success", "Number of pharms received: " + pharms.size());
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Pharmacy>> call, Throwable t) {
-
-
-                Log.e("failure",t.getMessage());
-
-            }
-        });
-
-
-
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
         mAdapter = new PharmacyAdapter(pharmsList, new OnItemClickListener() {
             @Override
             public void onItemClick(Pharmacy item) {
                 Intent pharmMapIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
                 startActivity(pharmMapIntent);
-            }
-        });
+                mAdapter.notifyDataSetChanged();
+            }});
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        preparePharmsData();
+
+
+        //preparePharmsData();
 
         return view;
     }
