@@ -17,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Rayhane on 30/04/2017.
@@ -30,5 +31,8 @@ public interface DzpharmsClient {
     @Headers("Content-Type:application/json")
     @POST("nearPharmacies")
     Call<List<Pharmacy>> getNearestPharms(@Body PostBody location);
+
+    @GET("pharmacies")
+    Call<List<Pharmacy>> getPharmacy(@Query("name") String name);
 
 }

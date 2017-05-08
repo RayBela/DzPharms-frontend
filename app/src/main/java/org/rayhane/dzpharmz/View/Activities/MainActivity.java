@@ -1,5 +1,7 @@
 package org.rayhane.dzpharmz.View.Activities;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,9 +24,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,13 +41,26 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
+import org.rayhane.dzpharmz.Interfaces.OnItemClickListener;
+import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
+import org.rayhane.dzpharmz.Services.DzpharmsClient;
 import org.rayhane.dzpharmz.View.Decoration.CircleTransform;
 import org.rayhane.dzpharmz.View.Fragments.AddPharmacyFragment;
 import org.rayhane.dzpharmz.View.Fragments.AddressesListFragment;
 import org.rayhane.dzpharmz.View.Fragments.FavorisFragment;
 import org.rayhane.dzpharmz.View.Fragments.HomeFragment;
 import org.rayhane.dzpharmz.View.Fragments.PharmsListFragment;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import static org.rayhane.dzpharmz.Services.ApiClient.getClient;
 
 public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
@@ -89,7 +106,13 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
 
 
-
+    //visual components variables
+    private ProgressDialog mProgressDialog;
+    /**
+     * load navigation drawer with fragments
+     * signout
+     * recherche par nom
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,55 +122,31 @@ public class MainActivity extends AppCompatActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mHandler = new Handler();
+
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        mHandler = new Handler();
         navHeader = navigationView.getHeaderView(0);
+
         txtName = (TextView) navHeader.findViewById(R.id.name);
         txtWebsite = (TextView) navHeader.findViewById(R.id.website);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
-        // Navigation view header
 
         //drawer activities names
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
+        final LayoutInflater dialogInflater = this.getLayoutInflater();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Ajouter la recherche ici", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showResearchDialog(dialogInflater);
             }
+
         });
-
-     /*   if(!haveNetworkConnection()){
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Cette Application nécessite une connection Internet")
-                    .setCancelable(false)
-                    .setPositiveButton("Activer 3G ou WIFI", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                        }
-                    })
-
-                    .setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            MainActivity.this.finish();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }*/
-
-        // build google api client to sign out
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
 
         // load nav menu header data
         loadNavHeader();
@@ -161,9 +160,73 @@ public class MainActivity extends AppCompatActivity implements
             loadHomeFragment();
         }
 
+       buildGoogleApiClient();
+
+    }
+
+    private void showResearchDialog(final LayoutInflater inflaterL){
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final View view = inflaterL.inflate(R.layout.search_dialog, null);
+
+        builder.setView(view)
+                .setCancelable(false)
+                .setPositiveButton("Recherche", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        EditText searchfield = (EditText) view.findViewById(R.id.searchField);
+                        String searchQuery = searchfield.getText().toString();
 
 
+                        Retrofit retrofit = getClient();
+                        // Create a very simple REST adapter which points the dzpharms API endpoint.
+                        DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
+                        Call<List<Pharmacy>> call = client.getPharmacy(searchQuery);
 
+                        showProgressDialog();
+                        call.enqueue(new Callback<List<Pharmacy>>() {
+                            @Override
+                            public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
+
+                                Log.e("success", response.toString());
+                                List<Pharmacy> pharms = response.body();
+                                Pharmacy pharm = pharms.get(0);
+                                Log.e("success", "Number of pharms received: " + pharms.size());
+                                Log.e("pharms list", pharms.toString());
+
+                                if (pharm != null) {
+                                    Intent pharmMapIntent = new Intent(MainActivity.this, PharmacyMapsActivity.class);
+                                    pharmMapIntent.putExtra("pharmacy", pharm);
+                                    hideProgressDialog();
+                                    startActivity(pharmMapIntent);
+                                } else {
+                                    hideProgressDialog();
+                                    Toast toast = new Toast(getApplicationContext());
+                                    toast.makeText(getApplicationContext(), "Pharmacie introuvable", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Pharmacy>> call, Throwable t) {
+                                hideProgressDialog();
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.makeText(getApplicationContext(), "Pharmacie introuvable", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                    });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+    synchronized private void buildGoogleApiClient(){
+        // build google api client to sign out
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
     }
 
     /***
@@ -172,14 +235,11 @@ public class MainActivity extends AppCompatActivity implements
      * name, website, notifications action view (dot)
      */
     private void loadNavHeader() {
-
         Intent introIntent = getIntent();
-
         // name, website
         txtName.setText(introIntent.getStringExtra("userName"));
         txtWebsite.setText(introIntent.getStringExtra("userEmail"));
         urlProfileImg = introIntent.getStringExtra("imgUrl");
-        // loading header background image
 
         // Loading profile image
         Glide.with(this).load(urlProfileImg)
@@ -191,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // showing dot next to notifications label
         navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);// showing dot next to notifications label
-
     }
 
     /***
@@ -199,21 +258,16 @@ public class MainActivity extends AppCompatActivity implements
      * selected from navigation menu
      */
     private void loadHomeFragment() {
-
         selectNavMenu();
         setToolbarTitle();
-
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
-
             toggleFab();
             return;
         }
-
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
-
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -222,22 +276,14 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentTransaction.commitAllowingStateLoss();
             }
         };
-
         if (mPendingRunnable != null) {
             mHandler.post(mPendingRunnable);
         }
-
         toggleFab();
-
         drawer.closeDrawers();
-
         invalidateOptionsMenu();
     }
 
-    /**
-     *
-     * @return
-     */
 
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
@@ -249,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements
                 return favorisFragment;
             case 2:
                 PharmsListFragment pharmsListFragment = new PharmsListFragment();
+
                 return pharmsListFragment;
 
             case 3:
@@ -272,7 +319,6 @@ public class MainActivity extends AppCompatActivity implements
     private void selectNavMenu() {
         navigationView.getMenu().getItem(navItemIndex).setChecked(true);
     }
-
 
     private void setUpNavigationView() {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -350,9 +396,7 @@ public class MainActivity extends AppCompatActivity implements
             drawer.closeDrawers();
             return;
         }
-
         if (shouldLoadHomeFragOnBackPress) {
-
             if (navItemIndex != 0) {
                 navItemIndex = 0;
                 CURRENT_TAG = TAG_HOME;
@@ -367,8 +411,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-
         mGoogleApiClient.connect();
+        loadNavHeader();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNavHeader();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
         loadNavHeader();
     }
 
@@ -404,23 +459,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
     /***
      * method show fab
      */
@@ -444,8 +482,6 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
     }
-
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -480,5 +516,19 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Recherche...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 
 }

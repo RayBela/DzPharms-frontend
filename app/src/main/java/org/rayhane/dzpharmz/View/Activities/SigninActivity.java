@@ -69,7 +69,7 @@ public class SigninActivity extends AppCompatActivity implements
                     .setCancelable(false)
                     .setPositiveButton("Activer 3G ou WIFI", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                            startActivity(new Intent(Settings.ACTION_SETTINGS));
                         }
                     })
 

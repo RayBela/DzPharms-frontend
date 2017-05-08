@@ -69,12 +69,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         ResultCallback<LocationSettingsResult>{
 
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -123,12 +121,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mGoogleApiClient == null) buildGoogleApiClient();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        if(!haveNetworkConnection())
+            showConnectionDialog();
     }
 
 
@@ -153,15 +153,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 googleMap = mMap;
                 // For showing a move to my location button
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                mMap.setMyLocationEnabled(true);
+
+
+                // mMap.setMyLocationEnabled(true);
 
             }
         });
 
-        if(!haveNetworkConnection())
-        {
-            showConnectionDialog();
-        }
+        if (mGoogleApiClient == null)
+            buildGoogleApiClient();
+        requestLocationUpdates();
+
+
 
         return rootView;
     }
@@ -186,17 +189,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
 
     @Override
     public void onStart() {
+        super.onStart();
         if (mGoogleApiClient != null)
             mGoogleApiClient.connect();
-        super.onStart();
-
+        requestLocationUpdates();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+      //  hideProgressDialog();
 
 
     }
@@ -205,14 +210,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     public void onPause() {
         super.onPause();
         mapView.onResume();
+      //  hideProgressDialog();
+       // stopLocationUpdates();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected())
+        if(mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
-
     }
 
 
@@ -220,9 +226,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
+
     }
 
     @Override
@@ -236,13 +240,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
      * start of location methods
      */
 
-
-
-
     protected void requestLocationUpdates(){
         mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(5*1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setFastestInterval(5 * 1000);
+        mLocationRequest.setFastestInterval(5*1000);
     }
 
     public void addMarker(LatLng markerLocation, String posName, String description, String color){
@@ -253,8 +255,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         if(color == "green"){
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));}
         else {
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));        }
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        }
         mCurrLocationMarker = googleMap.addMarker(markerOptions);
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent markerIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
+                markerIntent.putExtra("name", marker.getTitle());
+                markerIntent.putExtra("address", marker.getSnippet());
+                Bundle args = new Bundle();
+                args.putParcelable("position", marker.getPosition());
+                markerIntent.putExtra("bundle",args);
+                startActivity(markerIntent);
+            }
+        });
+        /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent markerIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
+                markerIntent.putExtra("name", marker.getTitle());
+                markerIntent.putExtra("address", marker.getSnippet());
+                Bundle args = new Bundle();
+                args.putParcelable("position", marker.getPosition());
+                markerIntent.putExtra("bundle",args);
+                startActivity(markerIntent);
+                return false;
+            }
+        });*/
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -264,19 +292,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
-      // requestLocationUpdates();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        if(haveNetworkConnection()) {
+       checkLocationSettings();
+        getCurrentLocation();
 
-        checkLocationSettings();
-            showProgressDialog();
+    }
 
-            getCurrentLocation();}
-
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
     }
 
     private void checkLocationSettings(){
@@ -296,14 +324,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
 
     private void getCurrentLocation(){
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             final LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             Log.i("location :"," "+latLng.toString());
             displayCurrentLocation(latLng);
-            retrofitCall();
-
+            getNearestPharms(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+            moveCamera(12,latLng);
 
         } else {
             requestLocationUpdates();
@@ -313,12 +344,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     }
 
     private void displayCurrentLocation(LatLng latLng){
-
-
+      //  showProgressDialog();
         addMarker(latLng,"Votre Position","Vous etes Ici","red");
-        //move map camera
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+    }
+
+    private void moveCamera(float zoom,LatLng position){
+      //move map camera
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoom));
     }
 
 
@@ -336,14 +369,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     @Override
     public void onLocationChanged(Location location) {
 
+
+
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
         mLastLocation = location;
         final LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        showProgressDialog();
         displayCurrentLocation(latLng);
-        retrofitCall();
+        getNearestPharms(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+        moveCamera(12,latLng);
+        stopLocationUpdates();
 
     }
 
@@ -372,16 +408,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
      * getting nearest pharms
      */
 
-    private void retrofitCall(){
+    private void getNearestPharms(double lat, double lng){
 
-        PostBody postLocation = new PostBody(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-
+        PostBody postLocation = new PostBody(lat,lng);
         Retrofit retrofit = getClient();
         // Create a very simple REST adapter which points the dzpharms API endpoint.
         DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
         Call<List<Pharmacy>> call = client.getNearestPharms
                 (postLocation);
-
+       showProgressDialog();
         call.enqueue(new Callback<List<Pharmacy>>() {
             @Override
             public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
@@ -396,8 +431,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                     addMarker(pharmLocation,"Pharmacie " + element.getName(),element.getPharmacy_address(),"green");
 
                 }
-                hideProgressDialog();
 
+               hideProgressDialog();
             }
             @Override
             public void onFailure(Call<List<Pharmacy>> call, Throwable t) {
@@ -419,15 +454,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Cette Application nécessite une connection Internet")
                 .setCancelable(false)
-                .setPositiveButton("Activer 3G ou WIFI", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Activer Les données", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        startActivity(new Intent(Settings.ACTION_SETTINGS));
                     }
                 })
 
                 .setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        getActivity().finish();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
                     }
                 });
         AlertDialog alert = builder.create();
@@ -484,22 +520,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
 
     }
 
+
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onHomeFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CHECK_SETTINGS) {
-            if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(getActivity(), "GPS enabled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity(), "GPS is not enabled", Toast.LENGTH_LONG).show();
-            }
-
-        }
-    }
 }

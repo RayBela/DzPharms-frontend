@@ -2,76 +2,70 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:layout_margin="10dp"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:text="Ajouter une Adresse"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/addressName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
         android:hint="Nom Adresse"
         android:inputType="text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_margin="20dp"
+        android:hint="Numéro de Téléphone"
+        android:inputType="text"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/editText7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:hint="Latitude"
         android:inputType="text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_margin="20dp"
         android:hint="Longitude"
         android:inputType="text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="45dp"
         android:layout_gravity="center"
         android:background="@color/colorAccent"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Ajouter Position"
         android:textAllCaps="false"
-        android:textColor="@color/cardview_light_background" />
+        android:textColor="@color/cardview_light_background"
+        android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/colorAccent"
-        android:text="Valider"
-        android:textColor="@color/cardview_light_background" />
 </LinearLayout>

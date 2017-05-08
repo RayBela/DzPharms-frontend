@@ -11,14 +11,4 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-
-        android:layout_margin="15dp"
-        android:clickable="true"
-        android:src="@mipmap/ic_plus_white_24dp" />
-
 </FrameLayout>

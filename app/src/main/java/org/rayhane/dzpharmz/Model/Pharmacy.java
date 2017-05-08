@@ -1,10 +1,12 @@
 package org.rayhane.dzpharmz.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Rayhane on 25/04/2017.
  */
 
-public class Pharmacy {
+public class Pharmacy implements Serializable {
 
     protected String name;
     protected String description;

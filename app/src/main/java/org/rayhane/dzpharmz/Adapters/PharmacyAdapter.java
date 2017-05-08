@@ -1,9 +1,14 @@
 package org.rayhane.dzpharmz.Adapters;
 
+import android.content.res.Resources;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.rayhane.dzpharmz.Interfaces.OnItemClickListener;
@@ -18,15 +23,20 @@ import java.util.List;
 
 public class PharmacyAdapter extends RecyclerView.Adapter<PharmacyAdapter.PharmacyViewHolder> {
 
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(int position);
+    }
+
     private List<Pharmacy> pharmsList;
     private final OnItemClickListener listener;
-
+    Fragment mFragment ;
 
 
     public class PharmacyViewHolder extends RecyclerView.ViewHolder {
         TextView pharmacyName;
-        TextView pharmacyState;
         TextView pharmacyAddress;
+        public View v;
+
 
 
 
@@ -34,14 +44,13 @@ public class PharmacyAdapter extends RecyclerView.Adapter<PharmacyAdapter.Pharma
 
         public PharmacyViewHolder(View v) {
             super(v);
+            this.v = v;
             pharmacyName = (TextView) v.findViewById(R.id.nameC);
-            pharmacyState = (TextView) v.findViewById(R.id.stateC);
             pharmacyAddress = (TextView) v.findViewById(R.id.addressC);
-
-
         }
 
         public void bind(final Pharmacy item, final OnItemClickListener listener) {
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -57,7 +66,7 @@ public class PharmacyAdapter extends RecyclerView.Adapter<PharmacyAdapter.Pharma
 
     }
 
-    public PharmacyAdapter(List<Pharmacy> pharmsList , OnItemClickListener listener) {
+    public PharmacyAdapter(List<Pharmacy> pharmsList, OnItemClickListener listener) {
         this.pharmsList = pharmsList;
         this.listener = listener;
 
@@ -70,6 +79,7 @@ public class PharmacyAdapter extends RecyclerView.Adapter<PharmacyAdapter.Pharma
 
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.pharmacy_card, parent, false);
+
         return new PharmacyViewHolder(itemView);
     }
 
@@ -77,10 +87,15 @@ public class PharmacyAdapter extends RecyclerView.Adapter<PharmacyAdapter.Pharma
     public void onBindViewHolder(PharmacyAdapter.PharmacyViewHolder holder, int position) {
         Pharmacy pharm = pharmsList.get(position);
         holder.bind(pharmsList.get(position), listener);
-        holder.pharmacyName.setText(pharm.getName());
+        holder.pharmacyName.setText("Pharmacie " + pharm.getName());
         holder.pharmacyAddress.setText(pharm.getPharmacy_address());
-        holder.pharmacyState.setText(pharm.getHref());
 
+        holder.v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
 
     }
 

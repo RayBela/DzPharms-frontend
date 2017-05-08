@@ -22,22 +22,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="110dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/favStar"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
+                android:clickable="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/grey_star" />
+                android:src="@mipmap/ic_pharmacy_grey600_24dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="247dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="0.28">
 
                 <TextView
                     android:id="@+id/nameC"
@@ -51,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/addressC"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="7dp"
                     android:layout_marginTop="7dp"
@@ -61,11 +64,11 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/stateC"
+                    android:id="@+id/hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="mmm dd yyyy - hh:mm a"
+                    android:text="08:00 - 22:00"
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp" />
 

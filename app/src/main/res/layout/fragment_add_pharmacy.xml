@@ -8,12 +8,14 @@
     android:forceHasOverlappingRendering="false"
     tools:context="org.rayhane.dzpharmz.View.Fragments.AddPharmacyFragment">
 
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="13dp"
         android:text="Suggerer Une Pharmacie"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
@@ -102,19 +104,17 @@
         android:layout_alignStart="@+id/editText6" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/validateBtn"
+        android:clickable="true"
         android:layout_width="250dp"
         android:layout_height="45dp"
-        android:layout_alignEnd="@+id/textView7"
-        android:layout_alignLeft="@+id/textView8"
-        android:layout_alignRight="@+id/textView7"
-        android:layout_alignStart="@+id/textView8"
-        android:layout_below="@+id/button2"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
         android:text="Valider"
         android:textColor="@color/cardview_light_background"
-        android:textSize="18sp" />
-
+        android:textSize="18sp"
+        android:layout_below="@+id/button2"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignStart="@+id/button2" />
+</ScrollView>
 </RelativeLayout>

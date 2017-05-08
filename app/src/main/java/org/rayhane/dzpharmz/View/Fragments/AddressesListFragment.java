@@ -1,9 +1,12 @@
 package org.rayhane.dzpharmz.View.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -60,6 +63,7 @@ public class AddressesListFragment extends Fragment {
     private RecyclerView recyclerView;
     private AddressAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton addAddressFab;
 
 
     @Override
@@ -69,9 +73,33 @@ public class AddressesListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_addresses_list, container, false);
 
+
+        final LayoutInflater dialogInflater = getActivity().getLayoutInflater();
+
+
         // Replace 'android.R.id.list' with the 'id' of your RecyclerView
         recyclerView = (RecyclerView) view.findViewById(R.id.addresses_recycler_view);
-        layoutManager = new LinearLayoutManager(this.getActivity());
+
+        addAddressFab = (FloatingActionButton) view.findViewById(R.id.addAddressFab);
+
+        addAddressFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setView(dialogInflater.inflate(R.layout.add_address_dialog,null))
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //add address
+                                //update ui
+                                //toast that address has been added
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+
         Log.d("debugMode", "The application stopped after this");
         recyclerView.setLayoutManager(layoutManager);
 
