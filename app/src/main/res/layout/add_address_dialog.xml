@@ -21,21 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:hint="Nom Adresse"
+        android:hint="Libelé"
         android:inputType="text"
         android:textSize="14sp" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:hint="Numéro de Téléphone"
-        android:inputType="text"
-        android:textSize="14sp" />
-
-    <EditText
+    <TextView
         android:id="@+id/editText7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,9 +33,10 @@
         android:layout_margin="20dp"
         android:hint="Latitude"
         android:inputType="text"
-        android:textSize="14sp" />
+        android:textAlignment="center"
+        android:textSize="16sp" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +44,8 @@
         android:layout_margin="20dp"
         android:hint="Longitude"
         android:inputType="text"
-        android:textSize="14sp" />
+        android:textAlignment="center"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/button2"

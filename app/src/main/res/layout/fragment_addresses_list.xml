@@ -19,7 +19,6 @@
         app:fabSize="normal"
         app:srcCompat="@mipmap/ic_plus_white_24dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
-        />
+        android:layout_margin="15dp" />
 
 </FrameLayout>

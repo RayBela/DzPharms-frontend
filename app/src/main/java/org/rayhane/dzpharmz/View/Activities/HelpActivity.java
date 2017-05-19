@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import org.rayhane.dzpharmz.R;
 
-public class PrivacyPolicyActivity extends AppCompatActivity {
+public class HelpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".View.Activities.AboutUsActivity" />
-        <activity android:name=".View.Activities.PrivacyPolicyActivity" />
+        <activity android:name=".View.Activities.HelpActivity" />
         <activity android:name=".View.Activities.MainActivity" />
         <activity
             android:name=".View.Activities.PharmacyMapsActivity"

@@ -17,29 +17,28 @@ import android.view.ViewGroup;
 import org.rayhane.dzpharmz.Adapters.AddressAdapter;
 import org.rayhane.dzpharmz.Model.Address;
 import org.rayhane.dzpharmz.R;
-import org.rayhane.dzpharmz.View.Decoration.DeviderItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class AddressesListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
+    private List<Address> addressesList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private AddressAdapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton addAddressFab;
+
     public AddressesListFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static AddressesListFragment newInstance(String param1, String param2) {
         AddressesListFragment fragment = new AddressesListFragment();
         Bundle args = new Bundle();
@@ -59,11 +58,7 @@ public class AddressesListFragment extends Fragment {
     }
 
 
-    private List<Address> addressesList = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private AddressAdapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FloatingActionButton addAddressFab;
+
 
 
     @Override
@@ -101,11 +96,14 @@ public class AddressesListFragment extends Fragment {
         });
 
         Log.d("debugMode", "The application stopped after this");
+        layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
 
-        mAdapter = new AddressAdapter(addressesList);
+        mAdapter = new AddressAdapter(addressesList, getActivity());
         recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
 
         prepareAddressesData();
 
@@ -119,21 +117,13 @@ public class AddressesListFragment extends Fragment {
         Address address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
         addressesList.add(address);
 
-        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
+        address = new Address("Travail","Avenue Hammu Mokhtar , Oran");
         addressesList.add(address);
-
-        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
-        addressesList.add(address);
-
-        address = new Address("Domicile","Hai Essabah , Bir El-Djir  , Oran");
-        addressesList.add(address);
-
 
         mAdapter.notifyDataSetChanged();
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -159,7 +149,6 @@ public class AddressesListFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

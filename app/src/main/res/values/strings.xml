@@ -10,27 +10,28 @@
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Accueil</string>
     <string name="nav_Favoris">Mes Favoris</string>
-    <string name="nav_Pharm_list">Pharmacies a proximité</string>
+    <string name="nav_Pharm_list">Pharmacies à proximité</string>
     <string name="nav_settings">Suggérer Pharmacie</string>
     <string name="nav_about_us">Qui Somme Nous</string>
     <string name="nav_addresses_list">Mes Adresses</string>
+    <string name="disconnect">Se Deconnecter</string>
 
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">
         <item>Accueil</item>
         <item>Mes Favoris</item>
-        <item>Pharmacies a proximité</item>
+        <item>Pharmacies à proximité</item>
         <item>Mes Adresses</item>
         <item>Suggérer Pharmacie</item>
 
     </string-array>
 
     <string name="activity_title_about_us">Qui Somme Nous</string>
-    <string name="activity_title_privacy_policy">Régles de Confidentialité</string>
+    <string name="activity_title_privacy_policy">Aide</string>
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Se Deconnecter</string>
     <string name="action_mark_all_read">Mark All as Read</string>
-    <string name="privacy_policy">Règles de confidentialité</string>
+    <string name="Aide">Aide</string>
 
 
     <string name="loadingLocation">Localisation…</string>
@@ -70,5 +71,5 @@
 
     <string name="title_activity_pharmacy">PharmacyActivity</string>
 
-    <string name="title_activity_pharmacy_maps">Carte</string>
+    <string name="title_activity_pharmacy_maps">Details de Pharmacie</string>
 </resources>

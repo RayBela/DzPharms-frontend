@@ -54,6 +54,17 @@ public class PharmsListFragment extends Fragment implements GoogleApiClient.Conn
         GoogleApiClient.OnConnectionFailedListener{
 
 
+    //Location variables
+    public Location mLastLocation;
+    protected LocationRequest mLocationRequest;
+    //location settings variables
+    public final static int REQUEST_CHECK_SETTINGS = 100;
+
+    // google play services variables
+    protected GoogleApiClient mGoogleApiClient;
+
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,15 +77,7 @@ public class PharmsListFragment extends Fragment implements GoogleApiClient.Conn
     private OnFragmentInteractionListener mListener;
 
 
-    //ocation variables
-    public Location mLastLocation;
-    private Marker mCurrLocationMarker;
-    protected LocationRequest mLocationRequest;
-    //location settings variables
-    public final static int REQUEST_CHECK_SETTINGS = 100;
 
-    // google play services variables
-    protected GoogleApiClient mGoogleApiClient;
 
     //tags
     private static final String TAG = "HomeFragment";
@@ -256,7 +259,7 @@ public class PharmsListFragment extends Fragment implements GoogleApiClient.Conn
                         pharmMapIntent.putExtra("pharmacy", item);
                         startActivity(pharmMapIntent);
                     }
-                });
+                },getActivity());
                 recyclerView.setAdapter(mAdapter);
                 hideProgressDialog();
 

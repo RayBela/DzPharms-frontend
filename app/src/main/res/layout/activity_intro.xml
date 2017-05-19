@@ -37,11 +37,11 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="300dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="31dp"
-        android:gravity="center_vertical|center"
+        android:layout_height="60dp"
         android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:gravity="center_vertical|center" />
 
     <ImageView
         android:id="@+id/imageView4"

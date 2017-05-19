@@ -43,13 +43,13 @@ public class SigninActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    private ProgressDialog mProgressDialog;
-
     private SignInButton signInBtn;
+
+
 
     public String txtName, txtWebsite;
     public String imgProfileUrl;
-
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

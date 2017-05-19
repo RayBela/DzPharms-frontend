@@ -36,6 +36,7 @@ public class PharmacyMapsActivity extends AppCompatActivity implements OnMapRead
 
     private TextView name;
     private TextView address;
+    private TextView phoneNum;
     private String phoneNumber;
     private FloatingActionButton phoneNumberFab;
     private LatLng pharmPosition;
@@ -53,6 +54,7 @@ public class PharmacyMapsActivity extends AppCompatActivity implements OnMapRead
         name = (TextView) findViewById(R.id.pharmacyName);
         address = (TextView) findViewById(R.id.addressText);
         phoneNumberFab = (FloatingActionButton) findViewById(R.id.phoneFab);
+        phoneNum = (TextView) findViewById(R.id.phoneNumber);
 
         Intent pharmIntent = getIntent();
         mPharmacy = (Pharmacy) pharmIntent.getSerializableExtra("pharmacy");
@@ -63,6 +65,7 @@ public class PharmacyMapsActivity extends AppCompatActivity implements OnMapRead
             name.setText(nameP);
             address.setText(addressP);
             phoneNumber = mPharmacy.getPhone_number();
+            phoneNum.setText("Téléphone: " + phoneNumber);
 
         } else {
 

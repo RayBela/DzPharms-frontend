@@ -29,11 +29,17 @@
     <item android:title="Autres">
         <menu>
             <item
+                android:id="@+id/disconnect"
+                android:title="@string/disconnect"
+                android:icon="@mipmap/ic_logout_black_24dp"/>
+            <item
                 android:id="@+id/nav_about_us"
-                android:title="@string/nav_about_us" />
+                android:title="@string/nav_about_us"
+                android:icon="@mipmap/ic_account_multiple_black_24dp"/>
             <item
                 android:id="@+id/nav_privacy_policy"
-                android:title="@string/privacy_policy" />
+                android:title="@string/Aide"
+                android:icon="@mipmap/ic_help_circle_black_24dp"/>
         </menu>
     </item>
 

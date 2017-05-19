@@ -31,10 +31,10 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:src="@mipmap/ic_home_black_24dp" />
+                android:src="@mipmap/ic_map_marker_radius_grey600_24dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="239dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
@@ -62,6 +62,17 @@
 
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewOptionsA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:text="&#8942;"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
+                android:textSize="40sp" />
 
         </LinearLayout>
 

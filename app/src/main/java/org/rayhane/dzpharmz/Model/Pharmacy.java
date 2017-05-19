@@ -17,6 +17,12 @@ public class Pharmacy implements Serializable {
     protected String href;
 
 
+    public Pharmacy(String name, String pharmacy_address) {
+
+        this.name = name;
+        this.pharmacy_address = pharmacy_address;
+    }
+
     public Pharmacy() {
     }
 

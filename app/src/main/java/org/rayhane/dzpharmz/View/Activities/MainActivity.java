@@ -1,19 +1,13 @@
 package org.rayhane.dzpharmz.View.Activities;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -41,12 +35,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import org.rayhane.dzpharmz.Adapters.PharmacyAdapter;
-import org.rayhane.dzpharmz.Interfaces.OnItemClickListener;
 import org.rayhane.dzpharmz.Model.Pharmacy;
 import org.rayhane.dzpharmz.R;
 import org.rayhane.dzpharmz.Services.DzpharmsClient;
-import org.rayhane.dzpharmz.View.Decoration.CircleTransform;
 import org.rayhane.dzpharmz.View.Fragments.AddPharmacyFragment;
 import org.rayhane.dzpharmz.View.Fragments.AddressesListFragment;
 import org.rayhane.dzpharmz.View.Fragments.FavorisFragment;
@@ -126,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.searchFab);
 
         mHandler = new Handler();
         navHeader = navigationView.getHeaderView(0);
@@ -190,11 +181,10 @@ public class MainActivity extends AppCompatActivity implements
 
                                 Log.e("success", response.toString());
                                 List<Pharmacy> pharms = response.body();
+                                if (pharms.size() > 0){
                                 Pharmacy pharm = pharms.get(0);
-                                Log.e("success", "Number of pharms received: " + pharms.size());
                                 Log.e("pharms list", pharms.toString());
 
-                                if (pharm != null) {
                                     Intent pharmMapIntent = new Intent(MainActivity.this, PharmacyMapsActivity.class);
                                     pharmMapIntent.putExtra("pharmacy", pharm);
                                     hideProgressDialog();
@@ -215,7 +205,12 @@ public class MainActivity extends AppCompatActivity implements
                         });
 
                     }
-                    });
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -250,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements
                 .into(imgProfile);
 
         // showing dot next to notifications label
-        navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);// showing dot next to notifications label
     }
 
     /***
@@ -350,8 +344,11 @@ public class MainActivity extends AppCompatActivity implements
                         drawer.closeDrawers();
                         return true;
                     case R.id.nav_privacy_policy:
-                        startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
+                        startActivity(new Intent(MainActivity.this, HelpActivity.class));
                         drawer.closeDrawers();
+                        return true;
+                    case R.id.disconnect:
+                        signOut();
                         return true;
                     default:
                         navItemIndex = 0;
@@ -434,9 +431,6 @@ public class MainActivity extends AppCompatActivity implements
             getMenuInflater().inflate(R.menu.main, menu);
         }
 
-        if (navItemIndex == 3) {
-            getMenuInflater().inflate(R.menu.notifications, menu);
-        }
         return true;
     }
 
@@ -449,12 +443,7 @@ public class MainActivity extends AppCompatActivity implements
             signOut();
             return true;
         }
-        if (id == R.id.action_mark_all_read) {
-            Toast.makeText(getApplicationContext(), "All notifications marked as read!", Toast.LENGTH_LONG).show();
-        }
-        if (id == R.id.action_clear_notifications) {
-            Toast.makeText(getApplicationContext(), "Clear all notifications!", Toast.LENGTH_LONG).show();
-        }
+
         return super.onOptionsItemSelected(item);
     }
 

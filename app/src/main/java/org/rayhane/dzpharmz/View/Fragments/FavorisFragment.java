@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import org.rayhane.dzpharmz.Adapters.FavoriteAdapter;
 import org.rayhane.dzpharmz.Model.Favorite;
 import org.rayhane.dzpharmz.R;
-import org.rayhane.dzpharmz.View.Decoration.DeviderItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class FavorisFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
-        mAdapter = new FavoriteAdapter(favsList);
+        mAdapter = new FavoriteAdapter(favsList, getActivity());
         recyclerView.setAdapter(mAdapter);
 
         prepareFavsData();
@@ -84,28 +83,17 @@ public class FavorisFragment extends Fragment {
 
     private void prepareFavsData() {
 
-        Favorite favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        Favorite favorite = new Favorite("Pharmacie DJOUDAD","Hai Essabah , Residence Issiria , Bt 02","08:00h - 22:00h");
         favsList.add(favorite);
 
-        favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        favorite = new Favorite("Pharmacie BOUZIANE","Mosquée Principale , Pole Abdelhamid Ibn Badis","08:00h - 22:00h");
         favsList.add(favorite);
 
-        favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        favorite = new Favorite("Pharmacie Yakhou","22 Rue Ahmed Bouziane , Hai Seddikia","08:00h - 22:00h");
         favsList.add(favorite);
 
-
-        favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
+        favorite = new Favorite("Pharmacie Echifaa","Boulvard Millinium , Oran","08:00h - 22:00h");
         favsList.add(favorite);
-
-
-        favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
-        favsList.add(favorite);
-
-
-        favorite = new Favorite("Pharmacie 1","Rue Larbi Men Mhidi , Oran","Ouverte");
-        favsList.add(favorite);
-
-
 
         mAdapter.notifyDataSetChanged();
     }

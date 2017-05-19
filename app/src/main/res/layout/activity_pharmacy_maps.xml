@@ -24,7 +24,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="183dp"
+        android:layout_height="210dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -48,7 +48,7 @@
                 android:layout_below="@+id/imageView5"
                 android:layout_marginLeft="34dp"
                 android:layout_marginStart="34dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:text="Pharmacy Name"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
@@ -65,10 +65,10 @@
                 android:layout_marginTop="5dp"
                 android:text="Address , street ..."
                 android:textColor="@color/common_google_signin_btn_text_light_default"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/openTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/textView4"
@@ -76,9 +76,35 @@
                 android:layout_below="@+id/textView4"
                 android:layout_marginLeft="34dp"
                 android:layout_marginTop="12dp"
-                android:text="08:00 - 22:00"
+                android:text="Ouverture: 08:00h"
                 android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/closeTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView4"
+                android:layout_alignStart="@+id/textView4"
+                android:layout_below="@+id/textView4"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:text="Fermeture : 22:00h"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView4"
+                android:layout_alignStart="@+id/textView4"
+                android:layout_below="@+id/textView4"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -103,7 +129,7 @@
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="50dp"
                 android:layout_marginRight="50dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="75dp"
                 app:backgroundTint="@color/colorAccent"
                 app:srcCompat="@android:drawable/ic_menu_call" />
 

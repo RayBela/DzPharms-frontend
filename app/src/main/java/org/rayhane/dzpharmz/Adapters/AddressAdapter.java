@@ -1,10 +1,15 @@
 package org.rayhane.dzpharmz.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.rayhane.dzpharmz.Model.Address;
 import org.rayhane.dzpharmz.R;
@@ -18,12 +23,14 @@ import java.util.List;
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
 
     private List<Address> addressesList;
+    static Context context;
 
 
 
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         TextView addressName;
         TextView addressLocation;
+        TextView options;
 
 
 
@@ -31,14 +38,15 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             super(v);
             addressName = (TextView) v.findViewById(R.id.nameA);
             addressLocation = (TextView) v.findViewById(R.id.locationA);
-
-
+            options = (TextView) v.findViewById(R.id.textViewOptionsA);
 
         }
     }
 
-    public AddressAdapter(List<Address> addressesList) {
+    public AddressAdapter(List<Address> addressesList, Context context) {
         this.addressesList = addressesList;
+        this.context = context;
+
     }
 
 
@@ -57,6 +65,28 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         Address address = addressesList.get(position);
         holder.addressName.setText(address.getName());
         holder.addressLocation.setText(address.getLocation());
+
+        holder.options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                PopupMenu popup = new PopupMenu(context, view);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.delete_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Intent i;
+                        if ((item.getTitle().toString()).equalsIgnoreCase("Supprimer")) {
+                            Toast.makeText(PharmacyAdapter.context, "Supprimée", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show();
+            }
+        });
 
     }
 

@@ -10,20 +10,23 @@ public class Favorite {
     protected String address;
     protected double longitude;
     protected double latitude;
-    protected String state;
+    protected String time;
+    protected String phone_number;
+
+
 
     public Favorite(String name, String address, String state) {
         this.name = name;
         this.address = address;
-        this.state = state;
+        this.time = state;
     }
 
-    public String getState() {
-        return state;
+    public String getTime() {
+        return time;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getName() {

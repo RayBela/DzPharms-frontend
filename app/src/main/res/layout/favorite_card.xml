@@ -22,7 +22,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="110dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -34,7 +35,7 @@
                 android:src="@drawable/yellow_star" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="253dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
@@ -61,7 +62,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/stateF"
+                    android:id="@+id/hourF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
@@ -70,6 +71,17 @@
                     android:textSize="14sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewOptionsF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:text="&#8942;"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
+                android:textSize="40sp" />
 
         </LinearLayout>
 

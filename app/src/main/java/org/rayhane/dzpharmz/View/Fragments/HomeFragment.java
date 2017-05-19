@@ -14,12 +14,14 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -82,13 +84,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     // map variables
     MapView mapView;
     private GoogleMap googleMap;
+
     // google play services variables
     protected GoogleApiClient mGoogleApiClient;
 
-    //ocation variables
+    //Location variables
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
     protected LocationRequest mLocationRequest;
+
     //location settings variables
     public final static int REQUEST_CHECK_SETTINGS = 100;
 
@@ -97,6 +101,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
 
     //visual components variables
     private ProgressDialog mProgressDialog;
+    private FloatingActionButton sFab;
 
 
     /**
@@ -137,6 +142,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        View mainView = inflater.inflate(R.layout.app_bar_main, container, false);
+        sFab = (FloatingActionButton)mainView.findViewById(R.id.searchFab);
 
         // adding map to fragment
         mapView = (MapView) rootView.findViewById(R.id.map);
@@ -209,7 +217,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onResume();
+       // mapView.onResume();
       //  hideProgressDialog();
        // stopLocationUpdates();
     }
@@ -219,6 +227,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         super.onStop();
         if(mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
+       // mapView.onStop();
     }
 
 
@@ -248,6 +257,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     }
 
     public void addMarker(LatLng markerLocation, String posName, String description, String color){
+
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(markerLocation);
         markerOptions.title(posName);
@@ -257,6 +267,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         else {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
         }
+        /*if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }*/
         mCurrLocationMarker = googleMap.addMarker(markerOptions);
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -270,17 +283,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 startActivity(markerIntent);
             }
         });
-        /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+      /*  googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Intent markerIntent = new Intent(getActivity(), PharmacyMapsActivity.class);
-                markerIntent.putExtra("name", marker.getTitle());
-                markerIntent.putExtra("address", marker.getSnippet());
-                Bundle args = new Bundle();
-                args.putParcelable("position", marker.getPosition());
-                markerIntent.putExtra("bundle",args);
-                startActivity(markerIntent);
-                return false;
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(20, 20, 20, 60);
+                sFab.setLayoutParams(lp);
+                return true;
             }
         });*/
     }
@@ -334,7 +343,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
             Log.i("location :"," "+latLng.toString());
             displayCurrentLocation(latLng);
             getNearestPharms(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-            moveCamera(12,latLng);
+            moveCamera(14,latLng);
 
         } else {
             requestLocationUpdates();
@@ -369,8 +378,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
     @Override
     public void onLocationChanged(Location location) {
 
-
-
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -378,7 +385,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         final LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         displayCurrentLocation(latLng);
         getNearestPharms(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-        moveCamera(12,latLng);
+        moveCamera(14,latLng);
         stopLocationUpdates();
 
     }
@@ -416,7 +423,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
         DzpharmsClient client =  retrofit.create(DzpharmsClient.class);
         Call<List<Pharmacy>> call = client.getNearestPharms
                 (postLocation);
-       showProgressDialog();
+        showProgressDialog();
         call.enqueue(new Callback<List<Pharmacy>>() {
             @Override
             public void onResponse(Call<List<Pharmacy>> call, Response<List<Pharmacy>> response) {
@@ -426,12 +433,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 Log.e("pharms list", pharms.toString());
 
                 for (Pharmacy element : pharms) {
-
                     LatLng pharmLocation = new LatLng(element.getLatitude(),element.getLongitude());
-                    addMarker(pharmLocation,"Pharmacie " + element.getName(),element.getPharmacy_address(),"green");
-
+                    addMarker(pharmLocation,"Pharmacie " + element.getName(),element.getPharmacy_address() ,"green");
                 }
-
                hideProgressDialog();
             }
             @Override
@@ -439,8 +443,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback ,Google
                 Log.e("failure",t.getMessage());
             }
         });
-
-
     }
 
 
